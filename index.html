@@ -24,28 +24,97 @@ body{background:#f5ede0;display:flex;flex-direction:column}
 
 .main{flex:1;display:grid;grid-template-columns:1fr 340px;gap:0;overflow:hidden;min-height:0}
 
-/* MAP AREA */
-.map-area{
+/* REGION EXPLORER AREA */
+.region-explorer{
   position:relative;
-  background:linear-gradient(160deg,#dbe8f0 0%,#c4d9c4 40%,#d4c4a0 100%);
+  background:#f5ede0;
   overflow:hidden;
-  padding:16px;
+  padding:20px;
   display:flex;flex-direction:column;
 }
-.map-title{font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#6b4a2a;margin-bottom:10px}
+.map-title{font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#6b4a2a;margin-bottom:15px}
 
-.turkey-map{position:relative;flex:1}
-svg.turkey{width:100%;height:100%}
+.region-buttons {
+  flex: 1;
+  display: grid;
+  /* CHANGE: Create 4 columns */
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+  overflow-y: auto;
+  padding: 10px; /* Add some padding inside the container */
+}
 
-/* REGION CLICKABLE */
-.region{cursor:pointer;transition:opacity 0.2s,filter 0.2s;stroke:#fff;stroke-width:1.5}
-.region:hover{opacity:0.85;filter:brightness(1.1)}
-.region.selected{stroke:#2c1a0e;stroke-width:3;filter:brightness(1.15)}
+.region-btn {
+  cursor: pointer;
+  border: 2px solid transparent; /* Keep a transparent border initially */
+  border-radius: 12px;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  transition: all 0.3s ease;
+  /* ENHANCE: Slightly stronger shadow */
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  position: relative;
+  overflow: hidden; /* Prevent background from bleeding over border radius */
+}
 
-/* LEGEND */
-.legend{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
-.leg-item{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:500;color:#3a2510}
-.leg-dot{width:12px;height:12px;border-radius:3px;flex-shrink:0}
+.region-btn:hover {
+  transform: translateY(-5px); /* Stronger hover effect */
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+.region-btn.selected {
+  border-color: #2c1a0e;
+  background: rgba(253, 249, 245, 0.9); /* Lighter selection overlay */
+  box-shadow: 0 6px 18px rgba(0,0,0,0.2);
+}
+
+/* New Colorful Backgrounds for each Region */
+/* Use linear gradients for better visual appeal */
+.region-btn.marmara {
+  background: linear-gradient(135deg, #e0b06a 0%, #d4a843 100%); /* Muted orange/terracotta */
+  border-color: #a78049;
+}
+.region-btn.ege {
+  background: linear-gradient(135deg, #a0d8f0 0%, #6bc0d0 100%); /* Warm blue/cyan */
+  border-color: #49a0af;
+}
+.region-btn.akdeniz {
+  background: linear-gradient(135deg, #f0b06a 0%, #e09843 100%); /* Warmer orange */
+  border-color: #b07030;
+}
+.region-btn.ic_anadolu {
+  background: linear-gradient(135deg, #f0d06a 0%, #e0b843 100%); /* Golden yellow/wheat */
+  border-color: #b89030;
+}
+.region-btn.karadeniz {
+  background: linear-gradient(135deg, #b0d8a0 0%, #8bc080 100%); /* Green */
+  border-color: #6a9a60;
+}
+.region-btn.dogu_anadolu {
+  background: linear-gradient(135deg, #d8e8f0 0%, #b0c8d0 100%); /* Cool blue/grey */
+  border-color: #90a8b0;
+}
+.region-btn.guneydogu {
+  background: linear-gradient(135deg, #f0c06a 0%, #e0a843 100%); /* Warmer orange/yellow */
+  border-color: #b08030;
+}
+
+/* Adjust text colors to be readable on gradients */
+.region-btn-icon {font-size: 30px; margin-bottom: 10px; color: #fff;} /* White icons */
+.region-btn-name {font-family:'Playfair Display',serif;font-size:16px;font-weight:700; color: #fff;} /* White text */
+.region-btn-sub {font-size:11px;color:#2c1a0e;font-weight:600; background: rgba(255, 255, 255, 0.3); border-radius: 10px; padding: 2px 5px;} /* Readable subtitle */
+
+/* Special handling for dark background readability */
+.region-btn.ege .region-btn-name,
+.region-btn.ege .region-btn-sub,
+.region-btn.dogu_anadolu .region-btn-name,
+.region-btn.dogu_anadolu .region-btn-sub {
+  color: #1a0e0e; /* Darken for light backgrounds */
+}
 
 /* RIGHT PANEL */
 .info-panel{
@@ -115,58 +184,16 @@ svg.turkey{width:100%;height:100%}
 </div>
 
 <div class="main">
-  <div class="map-area">
-    <div class="map-title">🔍 Bölgeye tıkla → bilgilerini keşfet</div>
-    <div class="turkey-map">
-      <!-- Simplified Turkey SVG with 7 regions -->
-      <svg class="turkey" viewBox="0 0 900 400" xmlns="http://www.w3.org/2000/svg">
-        <!-- Marmara -->
-        <path class="region" data-region="marmara" fill="#8B6914"
-          d="M60,80 L200,60 L240,100 L220,150 L160,170 L80,160 L50,120 Z"/>
-        <!-- Ege -->
-        <path class="region" data-region="ege" fill="#c9852a"
-          d="M80,160 L160,170 L200,220 L180,290 L120,310 L60,270 L40,200 Z"/>
-        <!-- Akdeniz -->
-        <path class="region" data-region="akdeniz" fill="#d4a843"
-          d="M160,170 L320,150 L380,200 L360,280 L280,320 L200,310 L180,290 L200,220 Z"/>
-        <!-- İç Anadolu -->
-        <path class="region" data-region="ic_anadolu" fill="#b8956a"
-          d="M220,100 L380,80 L480,100 L500,180 L380,200 L320,150 L240,100 Z"/>
-        <!-- Karadeniz -->
-        <path class="region" data-region="karadeniz" fill="#4a7c4e"
-          d="M200,60 L440,30 L560,50 L580,100 L480,100 L380,80 L240,100 L200,60 Z"/>
-        <!-- Doğu Anadolu -->
-        <path class="region" data-region="dogu_anadolu" fill="#9b6b3a"
-          d="M480,100 L680,80 L760,120 L740,200 L640,240 L540,220 L500,180 Z"/>
-        <!-- Güneydoğu Anadolu -->
-        <path class="region" data-region="guneydogu" fill="#e8b84b"
-          d="M500,180 L540,220 L640,240 L660,300 L560,320 L440,300 L380,280 L360,200 L380,200 L500,180 Z"/>
-
-        <!-- Region Labels -->
-        <text x="135" y="125" fill="white" font-size="11" font-weight="600" text-anchor="middle" pointer-events="none">Marmara</text>
-        <text x="115" y="235" fill="white" font-size="11" font-weight="600" text-anchor="middle" pointer-events="none">Ege</text>
-        <text x="270" y="250" fill="white" font-size="11" font-weight="600" text-anchor="middle" pointer-events="none">Akdeniz</text>
-        <text x="360" y="145" fill="white" font-size="11" font-weight="600" text-anchor="middle" pointer-events="none">İç Anadolu</text>
-        <text x="390" y="70" fill="white" font-size="11" font-weight="600" text-anchor="middle" pointer-events="none">Karadeniz</text>
-        <text x="610" y="165" fill="white" font-size="11" font-weight="600" text-anchor="middle" pointer-events="none">Doğu Anadolu</text>
-        <text x="520" y="265" fill="white" font-size="11" font-weight="600" text-anchor="middle" pointer-events="none">G.Doğu</text>
-      </svg>
-    </div>
-    <div class="legend">
-      <div class="leg-item"><div class="leg-dot" style="background:#8B6914"></div>Killi-Kireçli</div>
-      <div class="leg-item"><div class="leg-dot" style="background:#c9852a"></div>Kumlu-Verimli</div>
-      <div class="leg-item"><div class="leg-dot" style="background:#d4a843"></div>Alüvyal</div>
-      <div class="leg-item"><div class="leg-dot" style="background:#b8956a"></div>Step Toprağı</div>
-      <div class="leg-item"><div class="leg-dot" style="background:#4a7c4e"></div>Orman Toprağı</div>
-      <div class="leg-item"><div class="leg-dot" style="background:#9b6b3a"></div>Volkanik</div>
-      <div class="leg-item"><div class="leg-dot" style="background:#e8b84b"></div>Harran Toprağı</div>
-    </div>
+  <div class="region-explorer">
+    <div class="map-title">🔍 Bölge seç → bilgilerini keşfet</div>
+    <div class="region-buttons" id="regionButtons">
+      </div>
   </div>
 
   <div class="info-panel">
     <div class="panel-top">
       <h2 id="panelTitle">Bir bölge seç</h2>
-      <div class="region-subtitle" id="panelSub">Harita üzerinde bölgeye tıkla 👆</div>
+      <div class="region-subtitle" id="panelSub">Bölgeler panelinden seçim yap 👆</div>
     </div>
     <div class="panel-body" id="panelBody">
       <div class="empty-state">
@@ -192,49 +219,49 @@ svg.turkey{width:100%;height:100%}
 <script>
 const regionData = {
   marmara: {
-    name: "Marmara Bölgesi", sub: "Killi-Kireçli Toprak",
+    name: "Marmara Bölgesi", sub: "Killi-Kireçli Toprak", icon: "🌾",
     toprak: "Killi-Kireçli", nem: "%72", yagis: "700 mm/yıl", sicaklik: "14°C",
     urunler: ["Buğday","Ayçiçeği","Üzüm","Zeytin","Şekerpancarı"],
     bars: [{label:"Tarım Alanı",pct:65,color:"#c9852a"},{label:"Verimlilik",pct:78,color:"#66bb6a"},{label:"Nem",pct:72,color:"#42a5f5"}],
     quiz: {q:"Marmara'da en çok üretilen yağlı tohum hangisidir?", opts:["Ayçiçeği","Soya","Pamuk","Susam"], correct:0}
   },
   ege: {
-    name: "Ege Bölgesi", sub: "Kumlu-Alüvyal, Çok Verimli",
+    name: "Ege Bölgesi", sub: "Kumlu-Alüvyal, Verimli", icon: "🍇",
     toprak: "Alüvyal-Kumlu", nem: "%65", yagis: "650 mm/yıl", sicaklik: "17°C",
     urunler: ["Üzüm","Zeytin","İncir","Pamuk","Tütün"],
     bars: [{label:"Tarım Alanı",pct:70,color:"#c9852a"},{label:"Verimlilik",pct:88,color:"#66bb6a"},{label:"İhracat",pct:82,color:"#ffb300"}],
     quiz: {q:"Türkiye dünya incir üretiminin kaçta birini Ege'den karşılar?", opts:["%15","%35","%55 civarı","%80+"], correct:2}
   },
   akdeniz: {
-    name: "Akdeniz Bölgesi", sub: "Alüvyal Delta Toprağı",
+    name: "Akdeniz Bölgesi", sub: "Alüvyal Delta Toprağı", icon: "🍊",
     toprak: "Alüvyal-Kırmızı", nem: "%68", yagis: "900 mm/yıl", sicaklik: "19°C",
     urunler: ["Pamuk","Narenciye","Seracılık","Muz","Susam"],
     bars: [{label:"Tarım Alanı",pct:58,color:"#c9852a"},{label:"Verimlilik",pct:92,color:"#66bb6a"},{label:"Sera",pct:95,color:"#26c6da"}],
     quiz: {q:"Akdeniz'de hangisi sera tarımının merkezidir?", opts:["Mersin","Adana","Antalya","Hatay"], correct:2}
   },
   ic_anadolu: {
-    name: "İç Anadolu Bölgesi", sub: "Step (Bozkır) Toprağı",
+    name: "İç Anadolu Bölgesi", sub: "Step (Bozkır) Toprağı", icon: "🚜",
     toprak: "Kalkerli-Kuru Step", nem: "%45", yagis: "320 mm/yıl", sicaklik: "11°C",
     urunler: ["Buğday","Arpa","Nohut","Mercimek","Şekerpancarı"],
     bars: [{label:"Tarım Alanı",pct:80,color:"#c9852a"},{label:"Verimlilik",pct:55,color:"#66bb6a"},{label:"Su İhtiyacı",pct:85,color:"#42a5f5"}],
     quiz: {q:"İç Anadolu neden Türkiye'nin 'ekmek sepeti' sayılır?", opts:["En verimli toprak","En geniş buğday ekimi","En çok yağış","Tüm bunlar"], correct:1}
   },
   karadeniz: {
-    name: "Karadeniz Bölgesi", sub: "Asidik Orman Toprağı",
+    name: "Karadeniz Bölgesi", sub: "Asidik Orman Toprağı", icon: "🌲",
     toprak: "Podzolik-Orman", nem: "%82", yagis: "1200 mm/yıl", sicaklik: "13°C",
     urunler: ["Çay","Fındık","Mısır","Tütün","Kivi"],
     bars: [{label:"Tarım Alanı",pct:42,color:"#c9852a"},{label:"Yağış",pct:95,color:"#42a5f5"},{label:"Fındık",pct:98,color:"#ffb300"}],
     quiz: {q:"Türkiye dünya fındık üretiminde kaçıncıdır?", opts:["3.","5.","1. (lider)","7."], correct:2}
   },
   dogu_anadolu: {
-    name: "Doğu Anadolu Bölgesi", sub: "Volkanik-Yüksek Yayla Toprağı",
+    name: "Doğu Anadolu Bölgesi", sub: "Volkanik Toprak", icon: "🏔️",
     toprak: "Volkanik-Bazaltik", nem: "%38", yagis: "400 mm/yıl", sicaklik: "4°C",
     urunler: ["Tahıl","Hayvancılık","Bal","Şekerpancarı","Elma"],
     bars: [{label:"Tarım Alanı",pct:35,color:"#c9852a"},{label:"Hayvancılık",pct:75,color:"#ef9a9a"},{label:"Yükseklik",pct:88,color:"#b0bec5"}],
     quiz: {q:"Doğu Anadolu'da tarımı en çok kısıtlayan faktör hangisidir?", opts:["Toprak kalitesi","Kısa vejetasyon süresi","Su eksikliği","Eğim"], correct:1}
   },
   guneydogu: {
-    name: "Güneydoğu Anadolu", sub: "Harran Ovası — Verimli Alüvyon",
+    name: "Güneydoğu Anadolu", sub: "Verimli Alüvyon", icon: "☀️",
     toprak: "Alüvyal-Siyah Toprak", nem: "%42", yagis: "450 mm/yıl", sicaklik: "18°C",
     urunler: ["Buğday","Pamuk","Antepfıstığı","Mercimek","Mısır"],
     bars: [{label:"Tarım Alanı",pct:72,color:"#c9852a"},{label:"GAP Sulaması",pct:68,color:"#42a5f5"},{label:"Potansiyel",pct:90,color:"#66bb6a"}],
@@ -245,21 +272,32 @@ const regionData = {
 let explored = new Set();
 let quizAnswered = {};
 
-document.querySelectorAll('.region').forEach(el => {
-  el.addEventListener('click', () => {
-    document.querySelectorAll('.region').forEach(r => r.classList.remove('selected'));
-    el.classList.add('selected');
-    const r = el.dataset.region;
-    showRegion(r);
-    if(!explored.has(r)){
-      explored.add(r);
+// Generate region buttons
+const regionButtonsContainer = document.getElementById('regionButtons');
+Object.keys(regionData).forEach(key => {
+  const d = regionData[key];
+  const btn = document.createElement('div');
+  btn.className = 'region-btn ' + key; // Add key class for coloring
+  btn.dataset.region = key;
+  btn.innerHTML = `
+    <div class="region-btn-icon">${d.icon}</div>
+    <div class="region-btn-name">${d.name}</div>
+    <div class="region-btn-sub">${d.sub}</div>
+  `;
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.region-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    showRegion(key);
+    if(!explored.has(key)){
+      explored.add(key);
       document.getElementById('exploreCount').textContent = explored.size;
     }
     document.querySelectorAll('.pdot').forEach(d => {
-      if(d.dataset.r === r) d.classList.add('active');
+      if(d.dataset.r === key) d.classList.add('active');
       else if(explored.has(d.dataset.r)) { d.classList.add('done'); d.classList.remove('active'); }
     });
   });
+  regionButtonsContainer.appendChild(btn);
 });
 
 function showRegion(r) {
